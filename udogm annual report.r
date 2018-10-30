@@ -63,21 +63,8 @@ end_report_window <- as.Date("2017-12-01")
 ##  join tables and first round mutate
 
 report_0 <- production %>%
-    left_join(., wells) %>%    
-    mutate(ReportPeriod = mdy(ReportPeriod),
-           Received = mdy(Received),
-           DaysProd = as.numeric(DaysProd),
-           Oil = as.numeric(Oil),
-           Gas = as.numeric(Gas),
-           Water = as.numeric(Water),
-           Ground_Elev = as.numeric(Ground_Elev),
-           Kelly_Elev = as.numeric(Kelly_Elev),
-           Floor_Elev = as.numeric(Floor_Elev),
-           ConfRelDate = ymd_hms(ConfRelDate),
-           TotCum_Oil = as.numeric(TotCum_Oil),
-           TotCum_Gas = as.numeric(TotCum_Gas),
-           TotCum_Water = as.numeric(TotCum_Water),
-           tag = paste(API, WellBore, FormationName, sep = '_'))
+    full_join(., wells) %>%    
+    mutate(tag = paste(API, WellBore, FormationName, sep = '_'))
 
 #####
 ##  filter down to the period/type of interest.
