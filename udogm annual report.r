@@ -38,7 +38,7 @@ udogm_data_pull <- function(url, file){
 ##  relevant tables from UDOGM
 
 wells <- udogm_data_pull('https://oilgas.ogm.utah.gov/pub/Database/Wells.zip',
-                         "Wells.csv")
+                         "Wells.csv") %>% select(-Operator)
 
 production <- udogm_data_pull('https://oilgas.ogm.utah.gov/pub/Database/Production2015To2020.zip',
                 'Production2015To2020.csv')
@@ -64,7 +64,7 @@ end_report_window <- as.Date("2017-12-01")
 #attempt to make more specific tag (unique ID)
 
 report_0 <- production %>%
-  left_join(., wells) %>%    
+  full_join(., wells) %>%    
   mutate(ReportPeriod = mdy(ReportPeriod),
          Received = mdy(Received),
          DaysProd = as.numeric(DaysProd),
@@ -117,7 +117,7 @@ t1 <- report_1 %>%
     select(tag, months_production, well_type)
 
 #added CountyName to final report 
-report_2 <- left_join(report_1, t1) %>%
+report_2 <- full_join(report_1, t1) %>%
     mutate(Condensate = ifelse(well_type == 'Gas Well', Oil, NA),
            Oil = ifelse(well_type == 'Oil Well', Oil, NA)) %>%
     group_by(tag, API, WellBore, FormationName, well_type, Operator, WellName, 
